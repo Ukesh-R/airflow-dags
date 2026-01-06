@@ -14,7 +14,7 @@ with DAG(
     task_id="cifar10_model",
     image="cifar10-train:1.0",
     api_version="auto",
-    auto_remove=True,
+    auto_remove="success",
     command="python train.py",
     docker_url="unix://var/run/docker.sock",
     network_mode="bridge"
