@@ -19,7 +19,7 @@ IMAGE = Variable.get(
 with DAG(
     dag_id="cifar10_pipeline_training",
     start_date=datetime(2024, 1, 1),
-    schedule_interval=None,
+    schedule=None,
     catchup=False,
     default_args=default_args,
     tags=["ml", "cifar10", "etl"],
