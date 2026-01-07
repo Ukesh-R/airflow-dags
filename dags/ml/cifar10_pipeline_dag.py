@@ -18,7 +18,7 @@ IMAGE = Variable.get(
 with DAG(
     dag_id="cifar10_pipeline_training",
     start_date=datetime(2024, 1, 1),
-    schedule=None,
+    schedule_interval=None,
     catchup=False,
     default_args=default_args,
     tags=["ml", "cifar10", "etl"],
@@ -35,8 +35,14 @@ with DAG(
         get_logs=True,
         labels={"stage": "extract"},
         resources={
-            "request_cpu": "250m",
-            "request_memory": "512Mi",
+            "requests": {
+                "cpu": "250m",
+                "memory": "512Mi",
+            },
+            "limits": {
+                "cpu": "500m",
+                "memory": "1Gi",
+            },
         },
     )
 
@@ -51,8 +57,14 @@ with DAG(
         get_logs=True,
         labels={"stage": "transform"},
         resources={
-            "request_cpu": "250m",
-            "request_memory": "512Mi",
+            "requests": {
+                "cpu": "250m",
+                "memory": "512Mi",
+            },
+            "limits": {
+                "cpu": "500m",
+                "memory": "1Gi",
+            },
         },
     )
 
@@ -67,8 +79,14 @@ with DAG(
         get_logs=True,
         labels={"stage": "load"},
         resources={
-            "request_cpu": "250m",
-            "request_memory": "512Mi",
+            "requests": {
+                "cpu": "250m",
+                "memory": "512Mi",
+            },
+            "limits": {
+                "cpu": "500m",
+                "memory": "1Gi",
+            },
         },
     )
 
