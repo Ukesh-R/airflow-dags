@@ -2,6 +2,7 @@ from airflow import DAG
 from datetime import datetime, timedelta
 from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
 from airflow.models import Variable
+from kubernetes.client import V1ResourceRequirements
 
 default_args = {
     "owner": "ml-team",
@@ -18,7 +19,7 @@ IMAGE = Variable.get(
 with DAG(
     dag_id="cifar10_pipeline_training",
     start_date=datetime(2024, 1, 1),
-    schedule=None,
+    schedule_interval=None,
     catchup=False,
     default_args=default_args,
     tags=["ml", "cifar10", "etl"],
@@ -34,16 +35,16 @@ with DAG(
         is_delete_operator_pod=True,
         get_logs=True,
         labels={"stage": "extract"},
-        resources={
-            "requests": {
+        container_resources=V1ResourceRequirements(
+            requests={
                 "cpu": "250m",
                 "memory": "512Mi",
             },
-            "limits": {
+            limits={
                 "cpu": "500m",
                 "memory": "1Gi",
             },
-        },
+        ),
     )
 
     transform_data = KubernetesPodOperator(
@@ -56,16 +57,16 @@ with DAG(
         is_delete_operator_pod=True,
         get_logs=True,
         labels={"stage": "transform"},
-        resources={
-            "requests": {
+        container_resources=V1ResourceRequirements(
+            requests={
                 "cpu": "250m",
                 "memory": "512Mi",
             },
-            "limits": {
+            limits={
                 "cpu": "500m",
                 "memory": "1Gi",
             },
-        },
+        ),
     )
 
     load_data = KubernetesPodOperator(
@@ -78,16 +79,16 @@ with DAG(
         is_delete_operator_pod=True,
         get_logs=True,
         labels={"stage": "load"},
-        resources={
-            "requests": {
+        container_resources=V1ResourceRequirements(
+            requests={
                 "cpu": "250m",
                 "memory": "512Mi",
             },
-            "limits": {
+            limits={
                 "cpu": "500m",
                 "memory": "1Gi",
             },
-        },
+        ),
     )
 
     extract_data >> transform_data >> load_data
