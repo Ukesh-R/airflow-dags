@@ -8,7 +8,7 @@ def start():
 def end():
     print("task ended")
 
-with dag(
+with DAG(
     dag_id="two_task_dependency_dag",
     start_time=datetime(2024, 1, 1),
     schedule=None,
