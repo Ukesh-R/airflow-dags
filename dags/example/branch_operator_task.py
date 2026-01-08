@@ -1,5 +1,5 @@
 from airflow import DAG
-from airflow.operators.branch import BranchPythonOperator
+from airflow.operators.python import BranchPythonOperator
 from airflow.operators.python import PythonOperator
 from datetime import datetime
 import os
