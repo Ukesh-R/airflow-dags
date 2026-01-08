@@ -4,7 +4,7 @@ from airflow.models import Variable
 from datetime import datetime
 
 def variables_check():
-    env=Variables.get("env_name", default_var="local")
+    env=Variable.get("env_name", default_var="local")
     print(f"running in {env} environment")
 with DAG(
     dag_id="airflow_variables",
