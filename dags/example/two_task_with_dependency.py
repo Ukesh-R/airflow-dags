@@ -10,7 +10,7 @@ def end():
 
 with DAG(
     dag_id="two_task_dependency_dag",
-    start_time=datetime(2024, 1, 1),
+    start_date=datetime(2024, 1, 1),
     schedule=None,
     catchup=False,
 )as dag:
