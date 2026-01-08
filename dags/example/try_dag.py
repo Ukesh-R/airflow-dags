@@ -1,12 +1,13 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from datetime import datetime
 
 def say_hello():
     print("Hello")
 
 with DAG(
      dag_id="print_Message",
-     start_date=(2024, 1, 1),
+     start_date=datetime(2024, 1, 1),
      schedule=None,
      catchup=False,
 )as dag:
