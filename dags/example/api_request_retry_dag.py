@@ -4,7 +4,7 @@ from airflow.operators.python import PythonOperator
 import requests
 
 def call_api():
-    response= requests.get("https://dog.ceo/api/breeds/image/random",timeout=5),
+    response= requests.get("https://dog.ceo/api/breeds/image/random",timeout=5)
     response.raise_for_status()
     print("API Call Successful")
 

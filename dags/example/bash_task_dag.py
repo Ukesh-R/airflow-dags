@@ -11,5 +11,5 @@ with DAG(
     
     bash_task=BashOperator(
          task_id="bash_task",
-         bash_command="ecch 'Hello from Bash' && date && ls",
+         bash_command="echo 'Hello from Bash' && date && ls",
     )
