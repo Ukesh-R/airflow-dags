@@ -1,8 +1,5 @@
 from airflow import DAG
 from datetime import datetime, timedelta
-from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
-from airflow.models import Variable
-from kubernetes.client import V1ResourceRequirements
 
 default_args = {
     "owner": "ml-team",
@@ -10,11 +7,6 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
     "execution_timeout": timedelta(hours=1),
 }
-
-IMAGE = Variable.get(
-    "cifar10_pipeline_image",
-    default_var="ukesh01/cifar10-train:1.0"
-)
 
 with DAG(
     dag_id="cifar10_pipeline_training",
@@ -24,6 +16,15 @@ with DAG(
     default_args=default_args,
     tags=["ml", "cifar10", "etl"],
 ) as dag:
+
+    from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
+    from airflow.models import Variable
+    from kubernetes.client import V1ResourceRequirements
+
+    IMAGE = Variable.get(
+        "cifar10_pipeline_image",
+        default_var="ukesh01/cifar10-train:1.0"
+    )
 
     extract_data = KubernetesPodOperator(
         task_id="extract_data",
@@ -36,14 +37,8 @@ with DAG(
         get_logs=True,
         labels={"stage": "extract"},
         container_resources=V1ResourceRequirements(
-            requests={
-                "cpu": "250m",
-                "memory": "512Mi",
-            },
-            limits={
-                "cpu": "500m",
-                "memory": "1Gi",
-            },
+            requests={"cpu": "250m", "memory": "512Mi"},
+            limits={"cpu": "500m", "memory": "1Gi"},
         ),
     )
 
@@ -58,14 +53,8 @@ with DAG(
         get_logs=True,
         labels={"stage": "transform"},
         container_resources=V1ResourceRequirements(
-            requests={
-                "cpu": "250m",
-                "memory": "512Mi",
-            },
-            limits={
-                "cpu": "500m",
-                "memory": "1Gi",
-            },
+            requests={"cpu": "250m", "memory": "512Mi"},
+            limits={"cpu": "500m", "memory": "1Gi"},
         ),
     )
 
@@ -80,14 +69,8 @@ with DAG(
         get_logs=True,
         labels={"stage": "load"},
         container_resources=V1ResourceRequirements(
-            requests={
-                "cpu": "250m",
-                "memory": "512Mi",
-            },
-            limits={
-                "cpu": "500m",
-                "memory": "1Gi",
-            },
+            requests={"cpu": "250m", "memory": "512Mi"},
+            limits={"cpu": "500m", "memory": "1Gi"},
         ),
     )
 
